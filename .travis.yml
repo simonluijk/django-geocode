@@ -5,8 +5,8 @@ python:
   - "3.4"
 
 env:
-  - DJANGO="django==1.6.11 --use-mirrors"
-  - DJANGO="django==1.8.2 --use-mirrors"
+  - DJANGO="django==1.6.11 django-uuidfield"
+  - DJANGO="django==1.8.2"
 
 install:
   - pip install $DJANGO
@@ -15,3 +15,6 @@ install:
 
 script:
   - python geocode/runtests/runtests.py
+
+before_script:
+  - psql -c 'CREATE DATABASE travis; CREATE EXTENSION postgis;' -U postgres

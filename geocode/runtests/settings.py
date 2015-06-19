@@ -1,4 +1,5 @@
 # Django settings for django-geocode project.
+import os
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -12,16 +13,29 @@ ADMINS = (
 
 MANAGERS = ADMINS
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.contrib.gis.db.backends.postgis',
-        'NAME': 'docker',
-        'USER': 'docker',
-        'PASSWORD': 'docker',
-        'HOST': 'docker',
-        'PORT': '',
+if 'TRAVIS' in os.environ:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.contrib.gis.db.backends.postgis',
+            'NAME':     'travis',
+            'USER':     'postgres',
+            'PASSWORD': '',
+            'HOST':     'localhost',
+            'PORT':     '',
+        }
     }
-}
+
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.contrib.gis.db.backends.postgis',
+            'NAME': 'docker',
+            'USER': 'docker',
+            'PASSWORD': 'docker',
+            'HOST': 'docker',
+            'PORT': '',
+        }
+    }
 
 TIME_ZONE = 'Europe/London'
 LANGUAGE_CODE = 'en-uk'
