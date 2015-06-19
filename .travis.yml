@@ -17,4 +17,5 @@ script:
   - python geocode/runtests/runtests.py
 
 before_script:
-  - psql -c 'CREATE DATABASE travis; CREATE EXTENSION postgis;' -U postgres
+  - psql -c 'CREATE DATABASE travis;' -U postgres
+  - psql -c 'CREATE EXTENSION postgis;' -U postgres
