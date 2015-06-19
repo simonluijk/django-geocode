@@ -35,8 +35,6 @@ class GeoAddress(models.Model):
         mean center. Falling back to the mean center if all point are outside
         the 80 percentile.
         """
-        # TODO: Identify when there are only a few scattered points and don't
-        # return any coordinates?
         points = [p.point for p in self.geodata_set.all()[:conf.DATAPOINTS]]
         center = calculate_center(points)
         return [center.x, center.y]
