@@ -13,7 +13,7 @@ env:
 
 install:
   - pip install $DJANGO
-  - pip install celery geopy mock psycopg2 --use-mirrors
+  - pip install celery geopy mock psycopg2
   - export PYTHONPATH=.
 
 script:
