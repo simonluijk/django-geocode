@@ -93,8 +93,30 @@ class GeoCodeTestCase(TestCase):
 
         add_coordinates(point_uuid, [48.8582653, 2.2944946], tags=['ios', ])
 
-        match_coordinates = Matcher(compare, [48.8582653, 2.2944946], 3)
+        match_coordinates = Matcher(compare, [48.8582653, 2.2944946], 4)
         geocode_update.assert_called_once_with(sender=ANY,
                                                cluster='test',
+                                               point_uuid=point_uuid,
+                                               coordinates=match_coordinates)
+
+    @patch('geocode.geocode_update.send')
+    def test_regression_disparate_coordinates(self, geocode_update):
+        """
+        Regression test for when a mean center can not be found. This happens
+        if all coordinates are far apart.
+        """
+        from geocode.models import GeoAddress
+        from uuid import uuid4
+
+        point_uuid = uuid4()
+        address = GeoAddress.objects.create(uuid=point_uuid, cluster='reg')
+        address.add_coordinate([48.8582653, 2.2944946], ['ios', ])
+        address.add_coordinate([48.8582653, 1.2944946], ['ios', ])
+        address.add_coordinate([48.8582653, 0.2944946], ['ios', ])
+        address.send_geocode_update()
+
+        match_coordinates = Matcher(compare, [48.8582653, 1.2944946], 3)
+        geocode_update.assert_called_once_with(sender=ANY,
+                                               cluster='reg',
                                                point_uuid=point_uuid,
                                                coordinates=match_coordinates)

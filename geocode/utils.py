@@ -34,20 +34,29 @@ def mean_distances(points):
     return mean, [vincenty(p, mean).meters for p in points]
 
 
-def calculate_center(points):
+def calculate_center(points, depth=0):
+    """
+    Finds the mean center of the provided points. Returns when it finds a
+    cluster of points who's mean distance from the mean center is less
+    then 10 meters or when the max depth (20) is reached. On each iteration it
+    removes the furthest 5 percentile from the center.
+    """
+
     center, distances = mean_distances(points)
+    if mean(distances) <= 10 or depth > 20:
+        return center
+
+    percentiles = [percentile(distances, d) for d in distances]
+    max_percentile = max(percentiles) * 0.95
 
     center_points = []
     center_distences = []
-    for point, distance in zip(points, distances):
-        if percentile(distances, distance) <= 80:
-            center_points.append(point)
-            center_distences.append(distance)
+    for i, point_percentile in enumerate(percentiles):
+        if point_percentile <= max_percentile:
+            center_points.append(points[i])
+            center_distences.append(distances[i])
 
     if len(center_points):
-        if mean(center_distences) <= 10:
-            return mean_center(center_points)
-        else:
-            return calculate_center(center_points)
+        return calculate_center(center_points, depth=depth + 1)
     else:
         return center
