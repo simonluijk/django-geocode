@@ -12,8 +12,11 @@ def percentile(data_list, value):
 
 
 def mean(data_list):
+    length = len(data_list)
+    if length == 0:
+        return 0
     data_list = list(map(float, data_list))
-    return sum(data_list) / len(data_list)
+    return sum(data_list) / length
 
 
 def mean_center(points):
