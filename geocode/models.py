@@ -43,6 +43,10 @@ class GeoAddress(models.Model):
         center = calculate_center(points)
         return [center.x, center.y]
 
+    @property
+    def point(self):
+        return Point(self.coordinates[::-1])
+
     def run_geocode(self):
         from geocode.tasks import geocode_address_task
         geocode_address_task.delay(self.uuid)

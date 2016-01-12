@@ -16,6 +16,7 @@ def geocode_address(point_uuid, address, cluster=None):
                                                         cluster=cluster,
                                                         address=address)
     address.run_geocode()
+    return address
 
 
 def add_coordinates(point_uuid, coordinates, tags=None, weight=None):
@@ -29,6 +30,7 @@ def add_coordinates(point_uuid, coordinates, tags=None, weight=None):
     address = GeoAddress.objects.get(uuid=point_uuid)
     address.add_coordinate(coordinates, tags, weight)
     address.send_geocode_update()
+    return address
 
 
 def delete_coordinates(point_uuid, tags=None, geocoders=False):
@@ -42,6 +44,7 @@ def delete_coordinates(point_uuid, tags=None, geocoders=False):
     address = GeoAddress.objects.get(uuid=point_uuid)
     address.delete_coordinate(tags=tags, geocoders=geocoders)
     address.send_geocode_update()
+    return address
 
 
 class GeocodeAdmin(object):
