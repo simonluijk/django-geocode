@@ -6,8 +6,8 @@ class GeoDataInline(admin.TabularInline):
     model = GeoData
     extra = 0
     can_delete = False
-    fields = ('created', 'address', 'tags', 'point')
-    readonly_fields = ('created', 'address', 'tags', 'point')
+    fields = ('created', 'address', 'tags', 'point', 'weight')
+    readonly_fields = ('created', 'address', 'tags', 'point', 'weight')
 
     def has_add_permission(self, *args):
         return False

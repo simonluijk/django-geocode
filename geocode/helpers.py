@@ -18,7 +18,7 @@ def geocode_address(point_uuid, address, cluster=None):
     address.run_geocode()
 
 
-def add_coordinates(point_uuid, coordinates, tags=None):
+def add_coordinates(point_uuid, coordinates, tags=None, weight=None):
     """
     Adds coordinates to an address. A signal will be generated with updated
     coordinates.
@@ -27,7 +27,7 @@ def add_coordinates(point_uuid, coordinates, tags=None):
     coordinates: Coordinates to be added to the address data.
     """
     address = GeoAddress.objects.get(uuid=point_uuid)
-    address.add_coordinate(coordinates, tags)
+    address.add_coordinate(coordinates, tags, weight)
     address.send_geocode_update()
 
 

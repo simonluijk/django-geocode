@@ -35,7 +35,10 @@ class GeoAddress(models.Model):
         mean center. Falling back to the mean center if all point are outside
         the 80 percentile.
         """
-        points = [p.point for p in self.geodata_set.all()[:conf.DATAPOINTS]]
+        points = []
+        for point in self.geodata_set.all()[:conf.DATAPOINTS]:
+            for i in range(0, point.weight):
+                points.append(point.point)
         center = calculate_center(points)
         return [center.x, center.y]
 
@@ -50,16 +53,20 @@ class GeoAddress(models.Model):
                             cluster=self.cluster,
                             coordinates=self.coordinates)
 
-    def add_coordinate(self, coordinates, tags=None):
+    def add_coordinate(self, coordinates, tags=None, weight=None):
         if tags is None:
             tags = ['not-set', ]
+
+        if weight is None:
+            weight = 1
 
         tags = [tag.lower() for tag in tags]
         for tag in tags:
             Tag.objects.get_or_create(tag=tag)
         tags = ','.join(tags)
 
-        self.geodata_set.create(point=Point(*coordinates), tags=tags)
+        self.geodata_set.create(point=Point(*coordinates), tags=tags,
+                                weight=weight)
 
 
 class GeoData(models.Model):
@@ -67,6 +74,7 @@ class GeoData(models.Model):
     address = models.ForeignKey(GeoAddress)
     point = models.PointField(srid=4326)
     tags = models.CharField(max_length=255)
+    weight = models.PositiveIntegerField(default=1)
 
     class Meta:
         verbose_name = _('Geo data')
