@@ -5,7 +5,6 @@ from geocode.models import GeoAddress, GeoData
 class GeoDataInline(admin.TabularInline):
     model = GeoData
     extra = 0
-    can_delete = False
     fields = ('created', 'address', 'tags', 'point', 'weight')
     readonly_fields = ('created', 'address', 'tags', 'point', 'weight')
 
