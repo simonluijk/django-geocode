@@ -68,6 +68,9 @@ class GeoAddress(models.Model):
         self.geodata_set.create(point=Point(*coordinates), tags=tags,
                                 weight=weight)
 
+    def delete_coordinate(self, tag):
+        self.geodata_set.filter(tags__icontains=tag).delete()
+
 
 class GeoData(models.Model):
     created = models.DateTimeField(auto_now_add=True)
@@ -82,7 +85,7 @@ class GeoData(models.Model):
         ordering = ('-created', )
 
     def __unicode__(self):
-        return self.address
+        return '{0.x}, {0.y}'.format(self.point)
 
 
 class Tag(models.Model):
