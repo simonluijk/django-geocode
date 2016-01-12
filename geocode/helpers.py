@@ -31,7 +31,7 @@ def add_coordinates(point_uuid, coordinates, tags=None, weight=None):
     address.send_geocode_update()
 
 
-def delete_coordinates(point_uuid, tag=None):
+def delete_coordinates(point_uuid, tags=None, geocoders=False):
     """
     Delete coordinates from an address. A signal will be generated with updated
     coordinates.
@@ -40,7 +40,7 @@ def delete_coordinates(point_uuid, tag=None):
     tag: Only delete coordinates with this tag.
     """
     address = GeoAddress.objects.get(uuid=point_uuid)
-    address.delete_coordinate(tag)
+    address.delete_coordinate(tags=tags, geocoders=geocoders)
     address.send_geocode_update()
 
 

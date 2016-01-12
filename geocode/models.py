@@ -1,4 +1,5 @@
 from django.contrib.gis.db import models
+from django.contrib.gis.db.models import Q
 from django.contrib.gis.geos import Point
 from django.utils.translation import ugettext_lazy as _
 
@@ -68,8 +69,19 @@ class GeoAddress(models.Model):
         self.geodata_set.create(point=Point(*coordinates), tags=tags,
                                 weight=weight)
 
-    def delete_coordinate(self, tag):
-        self.geodata_set.filter(tags__icontains=tag).delete()
+    def delete_coordinate(self, tags=None, geocoders=False):
+        if tags is None:
+            tags = []
+
+        if geocoders:
+            for import_path, __ in conf.GEOCODERS:
+                tags.append(import_path.split('.')[-1])
+
+        q_objects = Q()
+        for tag in tags:
+            q_objects |= Q(tags__icontains=tag)
+
+        self.geodata_set.filter(q_objects).delete()
 
 
 class GeoData(models.Model):
