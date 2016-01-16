@@ -1,6 +1,6 @@
 import math
 from geopy.distance import vincenty
-from django.contrib.gis.geos import MultiPoint
+from django.contrib.gis.geos import Point, MultiPoint
 
 
 def percentile(data_list, value):
@@ -44,6 +44,9 @@ def calculate_center(points, depth=0):
     then 10 meters or when the max depth (20) is reached. On each iteration it
     removes the furthest 5 percentile from the center.
     """
+
+    if len(points) == 0:
+        return Point(0, 0)
 
     center, distances = mean_distances(points)
     if mean(distances) <= 10 or depth > 20:
