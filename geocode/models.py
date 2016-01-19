@@ -16,7 +16,7 @@ from geocode.utils import calculate_center
 class GeoAddress(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     uuid = UUIDField(unique=True)
-    cluster = models.CharField(_('Cluster'), max_length=50, null=True)
+    cluster = models.CharField(_('Cluster'), max_length=4096, null=True)
     address = models.TextField()
 
     class Meta:
@@ -92,7 +92,7 @@ class GeoData(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     address = models.ForeignKey(GeoAddress)
     point = models.PointField(srid=4326)
-    tags = models.CharField(max_length=255)
+    tags = models.CharField(max_length=4096)
     weight = models.PositiveIntegerField(default=1)
 
     class Meta:
@@ -105,7 +105,7 @@ class GeoData(models.Model):
 
 
 class Tag(models.Model):
-    tag = models.CharField(_('Tag'), max_length=50, unique=True)
+    tag = models.CharField(_('Tag'), max_length=4096, unique=True)
 
     class Meta:
         verbose_name = _('Tag')
