@@ -1,6 +1,5 @@
 from django.core.urlresolvers import reverse
 from django.utils.html import mark_safe
-from geocode.models import GeoAddress
 
 
 def geocode_address(point_uuid, address, cluster=None):
@@ -12,6 +11,8 @@ def geocode_address(point_uuid, address, cluster=None):
         the signal to identify messages they are interested in.
     address: Address to be GEO coded.
     """
+    from geocode.models import GeoAddress
+
     address, created = GeoAddress.objects.get_or_create(uuid=point_uuid,
                                                         cluster=cluster,
                                                         address=address)
@@ -27,6 +28,8 @@ def add_coordinates(point_uuid, coordinates, tags=None, weight=None):
     point_uuid: Unique identifier for the address in the system.
     coordinates: Coordinates to be added to the address data.
     """
+    from geocode.models import GeoAddress
+
     address = GeoAddress.objects.get(uuid=point_uuid)
     address.add_coordinate(coordinates, tags, weight)
     address.send_geocode_update()
@@ -41,6 +44,8 @@ def delete_coordinates(point_uuid, tags=None, geocoders=False):
     point_uuid: Unique identifier for the address in the system.
     tag: Only delete coordinates with this tag.
     """
+    from geocode.models import GeoAddress
+
     address = GeoAddress.objects.get(uuid=point_uuid)
     address.delete_coordinate(tags=tags, geocoders=geocoders)
     address.send_geocode_update()
@@ -53,6 +58,8 @@ class GeocodeAdmin(object):
         """
         Allows adding link to geocode data from an objects admin change view.
         """
+        from geocode.models import GeoAddress
+
         geocode = GeoAddress.objects.get(uuid=obj.point_uuid)
         url = reverse('admin:geocode_geoaddress_change', args=[geocode.id])
         return mark_safe('<a href="{0}">{1}</a>'.format(url, obj.point_uuid))
