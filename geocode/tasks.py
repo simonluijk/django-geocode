@@ -20,8 +20,8 @@ for import_path, kwargs in conf.GEOCODERS:
 
 @shared_task(bind=True, default_retry_delay=60*3, max_retries=20,
              ignore_result=True)
-def geocode_address_task(self, point_uuid):
-    address = GeoAddress.objects.get(uuid=point_uuid)
+def geocode_address_task(self, pk):
+    address = GeoAddress.objects.get(pk=pk)
 
     success_count = 0
     for geocoder, tag in geocoders:

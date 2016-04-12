@@ -49,7 +49,7 @@ class GeoAddress(models.Model):
 
     def run_geocode(self):
         from geocode.tasks import geocode_address_task
-        geocode_address_task.delay(self.uuid)
+        geocode_address_task.delay(self.pk)
 
     def send_geocode_update(self):
         from geocode.signals import geocode_update
