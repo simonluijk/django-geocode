@@ -1,3 +1,5 @@
+import logging
+
 from geopy.exc import GeopyError
 from celery import shared_task
 
@@ -10,6 +12,9 @@ try:
 except ImportError:
     # Older version of Django.
     from django.utils.module_loading import import_by_path as import_string
+
+
+logger = logging.getLogger('geocode')
 
 
 geocoders = []
@@ -27,8 +32,8 @@ def geocode_address_task(self, pk):
     for geocoder, tag in geocoders:
         try:
             location = geocoder.geocode(address.address)
-        except (GeopyError, IndexError):
-            pass
+        except (GeopyError, IndexError) as e:
+            logger.info(e)
         else:
             if location:
                 coordinates = [location.latitude, location.longitude]
