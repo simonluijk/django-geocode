@@ -47,9 +47,9 @@ class GeoAddress(models.Model):
     def point(self):
         return Point(self.coordinates[::-1])
 
-    def run_geocode(self):
+    def run_geocode(self, countdown=0):
         from geocode.tasks import geocode_address_task
-        geocode_address_task.delay(self.pk)
+        geocode_address_task.apply_async(args=(self.pk, ), countdown=countdown)
 
     def send_geocode_update(self):
         from geocode.signals import geocode_update

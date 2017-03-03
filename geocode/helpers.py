@@ -2,7 +2,7 @@ from django.core.urlresolvers import reverse
 from django.utils.html import mark_safe
 
 
-def geocode_address(point_uuid, address, cluster=None):
+def geocode_address(point_uuid, address, cluster=None, countdown=0):
     """
     Geo-codes an address. The result is returned in a signal.
 
@@ -13,10 +13,10 @@ def geocode_address(point_uuid, address, cluster=None):
     """
     from geocode.models import GeoAddress
 
+    defaults = {'address': address, 'cluster': cluster}
     address, created = GeoAddress.objects.get_or_create(uuid=point_uuid,
-                                                        cluster=cluster,
-                                                        address=address)
-    address.run_geocode()
+                                                        defaults=defaults)
+    address.run_geocode(countdown)
     return address
 
 
