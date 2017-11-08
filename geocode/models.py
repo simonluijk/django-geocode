@@ -45,7 +45,7 @@ class GeoAddress(models.Model):
 
     @property
     def point(self):
-        return Point(self.coordinates[::-1])
+        return Point(self.coordinates)
 
     def run_geocode(self, countdown=0):
         from geocode.tasks import geocode_address_task
