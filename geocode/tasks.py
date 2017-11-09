@@ -23,7 +23,7 @@ for import_path, kwargs in conf.GEOCODERS:
     geocoders.append((Geocoder(**kwargs), import_path.split('.')[-1]))
 
 
-@shared_task(bind=True, default_retry_delay=60*3, max_retries=20,
+@shared_task(bind=True, default_retry_delay=60 * 3, max_retries=20,
              ignore_result=True)
 def geocode_address_task(self, pk):
     address = GeoAddress.objects.get(pk=pk)
@@ -36,7 +36,7 @@ def geocode_address_task(self, pk):
             logger.info(e)
         else:
             if location:
-                coordinates = [location.latitude, location.longitude]
+                coordinates = [location.longitude, location.latitude]
                 address.add_coordinate(coordinates, tags=[tag, ])
                 success_count += 1
 
