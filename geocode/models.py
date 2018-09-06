@@ -2,12 +2,7 @@ from django.contrib.gis.db import models
 from django.contrib.gis.db.models import Q
 from django.contrib.gis.geos import Point
 from django.utils.translation import ugettext_lazy as _
-
-try:
-    from django.db.models import UUIDField
-    # Django 1.8 now includes a UUIDField (database representation differs)
-except ImportError:
-    from uuidfield import UUIDField
+from django.db.models import UUIDField
 
 from geocode import conf
 from geocode.utils import calculate_center
